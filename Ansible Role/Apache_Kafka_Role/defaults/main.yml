@@ -1,0 +1,570 @@
+---
+                                        ### default vars set to user & group ###
+
+kafka_user: kafka
+kafka_group: kafka
+
+# Start kafka after installation
+
+kafka_start: yes
+
+# Restart kafka on configuration change
+
+kafka_restart: yes
+
+                                      ### default vars set to config/server.properties ###
+
+############################# Server Basics #############################
+
+# The id of the broker. This must be set to a unique integer for each broker.
+
+kafka_broker_id: 0
+
+# The Java heap size (memory) allocation (xmx, xms)
+
+kafka_java_heap: "-Xms1G -Xmx1G"
+
+############################# Socket Server Settings #############################
+
+# The address the socket server listens on. If not configured, the host name will be equal to the value of
+# java.net.InetAddress.getCanonicalHostName(), with PLAINTEXT listener name, and port 9092.
+#   FORMAT:
+#     listeners = listener_name://host_name:port
+#   EXAMPLE:
+#     listeners = PLAINTEXT://your.host.name:9092
+#listeners=PLAINTEXT://:9092
+
+kafka_listeners:
+  - "PLAINTEXT://:9092"
+
+# Listener name, hostname and port the broker will advertise to clients.
+# If not set, it uses the value for "listeners".
+#advertised.listeners=PLAINTEXT://your.host.name:9092
+
+# Maps listener names to security protocols, the default is for them to be the same. See the config documentation for more details
+#listener.security.protocol.map=PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL
+
+# The number of threads that the server uses for receiving requests from the network and sending responses to the network
+kafka_num_network_threads: 3
+
+# The number of threads that the server uses for processing requests, which may include disk I/O
+kafka_num_io_threads: 8
+
+# The send buffer (SO_SNDBUF) used by the socket server
+kafka_socket_send_buffer_bytes: 102400
+
+# The receive buffer (SO_RCVBUF) used by the socket server
+kafka_socket_receive_buffer_bytes: 102400
+
+# The maximum size of a request that the socket server will accept (protection against OOM)
+kafka_socket_request_max_bytes: 104857600
+
+
+############################# Log Basics #############################
+
+# A comma separated list of directories under which to store log files
+kafka_log_dir: /tmp/kafka-logs
+
+# The default number of log partitions per topic. More partitions allow greater
+# parallelism for consumption, but this will also result in more files across
+# the brokers.
+kafka_num_partitions: 1
+
+# The number of threads per data directory to be used for log recovery at startup and flushing at shutdown.
+# This value is recommended to be increased for installations with data dirs located in RAID array.
+kafka_num_recovery_threads_per_data_dir: 1
+
+############################# Internal Topic Settings  #############################
+
+# The replication factor for the group metadata internal topics "__consumer_offsets" and "__transaction_state"
+# For anything other than development testing, a value greater than 1 is recommended to ensure availability such as 3.
+kafka_offsets_topic_replication_factor: 1
+kafka_transaction_state_log_replication_factor: 1
+kafka_transaction_state_log_min_isr: 1
+
+############################# Log Flush Policy #############################
+
+# Messages are immediately written to the filesystem but by default we only fsync() to sync
+# the OS cache lazily. The following configurations control the flush of data to disk.
+# There are a few important trade-offs here:
+#    1. Durability: Unflushed data may be lost if you are not using replication.
+#    2. Latency: Very large flush intervals may lead to latency spikes when the flush does occur as there will be a lot of data to flush.
+#    3. Throughput: The flush is generally the most expensive operation, and a small flush interval may lead to excessive seeks.
+# The settings below allow one to configure the flush policy to flush data after a period of time or
+# every N messages (or both). This can be done globally and overridden on a per-topic basis.
+
+# The number of messages to accept before forcing a flush of data to disk
+#log.flush.interval.messages=10000
+
+# The maximum amount of time a message can sit in a log before we force a flush
+#log.flush.interval.ms=1000
+
+############################# Log Retention Policy #############################
+
+# The following configurations control the disposal of log segments. The policy can
+# be set to delete segments after a period of time, or after a given size has accumulated.
+# A segment will be deleted whenever *either* of these criteria are met. Deletion always happens
+# from the end of the log.
+
+# The minimum age of a log file to be eligible for deletion due to age
+kafka_log_retention_hours: 168
+
+# A size-based retention policy for logs. Segments are pruned from the log unless the remaining
+# segments drop below log.retention.bytes. Functions independently of log.retention.hours.
+#log.retention.bytes=1073741824
+
+# The maximum size of a log segment file. When this size is reached a new log segment will be created.
+#log.segment.bytes=1073741824
+
+# The interval at which log segments are checked to see if they can be deleted according
+# to the retention policies
+kafka_log_retention_check_interval_ms: 300000
+
+############################# Zookeeper #############################
+
+# Zookeeper connection string (see zookeeper docs for details).
+# This is a comma separated host:port pairs, each corresponding to a zk
+# server. e.g. "127.0.0.1:3000,127.0.0.1:3001,127.0.0.1:3002".
+# You can also append an optional chroot string to the urls to specify the
+# root directory for all kafka znodes.
+kafka_zookeeper_connect: "localhost:2181"
+
+# Timeout in ms for connecting to zookeeper
+kafka_zookeeper_connection_timeout_ms: 18000
+
+
+############################# Group Coordinator Settings #############################
+
+# The following configuration specifies the time, in milliseconds, that the GroupCoordinator will delay the initial consumer rebalance.
+# The rebalance will be further delayed by the value of group.initial.rebalance.delay.ms as new members join the group, up to a maximum of max.poll.interval.ms.
+# The default value for this is 3 seconds.
+# We override this to 0 here as it makes for a better out-of-the-box experience for development and testing.
+# However, in production environments the default value of 3 seconds is more suitable as this will help to avoid unnecessary, and potentially expensive, rebalances during application startup.
+kafka_group_initial_rebalance_delay_ms: 0
+
+
+                                            ### default vars set to config/zookeeper.properties ###
+
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+# 
+#    http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# the directory where the snapshot is stored.
+zookeeper_dataDir: /tmp/zookeeper
+# the port at which the clients will connect
+zookeeper_clientPort: 2181
+# disable the per-ip limit on the number of connections since this is a non-production config
+zookeeper_maxClientCnxns: 0
+# Disable the adminserver by default to avoid port conflicts.
+# Set the port to something non-conflicting if choosing to enable this
+zookeeper_admin_enableServer: false
+# admin.serverPort=8080
+
+                                          ### default vars set to config/consumer.properties ###
+
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+# 
+#    http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# see org.apache.kafka.clients.consumer.ConsumerConfig for more details
+
+# list of brokers used for bootstrapping knowledge about the rest of the cluster
+# format: host1:port1,host2:port2 ...
+kafka_consumer_bootstrap_servers: localhost:9092
+
+# consumer group id
+kafka_consumer_group_id: test-consumer-group
+
+# What to do when there is no initial offset in Kafka or if the current
+# offset does not exist any more on the server: latest, earliest, none
+#auto.offset.reset=
+
+                                          ### default vars set to config/producer.properties ###
+
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# see org.apache.kafka.clients.producer.ProducerConfig for more details
+
+############################# Producer Basics #############################
+
+# list of brokers used for bootstrapping knowledge about the rest of the cluster
+# format: host1:port1,host2:port2 ...
+kafka_producer_bootstrap_servers: "localhost:9092"
+
+# specify the compression codec for all data generated: none, gzip, snappy, lz4, zstd
+kafka_producer_compression_type: none
+
+# name of the partitioner class for partitioning records;
+# The default uses "sticky" partitioning logic which spreads the load evenly between partitions, but improves throughput by attempting to fill the batches sent to each partition.
+#partitioner.class=
+
+# the maximum amount of time the client will wait for the response of a request
+#request.timeout.ms=
+
+# how long `KafkaProducer.send` and `KafkaProducer.partitionsFor` will block for
+#max.block.ms=
+
+# the producer will wait for up to the given delay to allow other records to be sent so that the sends can be batched together
+#linger.ms=
+
+# the maximum size of a request in bytes
+#max.request.size=
+
+# the default batch size in bytes when batching multiple records sent to a partition
+#batch.size=
+
+# the total bytes of memory the producer can use to buffer records waiting to be sent to the server
+#buffer.memory=
+
+                                          ### default vars set to config/connect-standalone.properties ###
+
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# These are defaults. This file just demonstrates how to override some settings.
+bootstrap_servers: "localhost:9092"
+
+# The converters specify the format of data in Kafka and how to translate it into Connect data. Every Connect user will
+# need to configure these based on the format they want their data in when loaded from or stored into Kafka
+key_converter: org.apache.kafka.connect.json.JsonConverter
+value_converter: org.apache.kafka.connect.json.JsonConverter
+# Converter-specific settings can be passed in by prefixing the Converter's setting with the converter we want to apply
+# it to
+key_converter_schemas_enable: true
+value_converter_schemas_enable: true
+
+offset_storage_file_filename: /tmp/connect.offsets
+# Flush much faster than normal, which is useful for testing/debugging
+offset_flush_interval_ms: 10000
+
+# Set to a list of filesystem paths separated by commas (,) to enable class loading isolation for plugins
+# (connectors, converters, transformations). The list should consist of top level directories that include 
+# any combination of: 
+# a) directories immediately containing jars with plugins and their dependencies
+# b) uber-jars with plugins and their dependencies
+# c) directories immediately containing the package directory structure of classes of plugins and their dependencies
+# Note: symlinks will be followed to discover dependencies or plugins.
+# Examples: 
+# plugin.path=/usr/local/share/java,/usr/local/share/kafka/plugins,/opt/connectors,
+#plugin.path=
+
+                                          ### default vars set to config/connect-console-sink.properties ###
+
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: local-console-sink
+connector_class: org.apache.kafka.connect.file.FileStreamSinkConnector
+tasks_max: 1
+topics: connect-test
+
+                                          ### default vars set to config/connect-console-source.properties ###
+
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: local-console-source
+connector_class: org.apache.kafka.connect.file.FileStreamSourceConnector
+tasks_max: 1
+topic: connect-test
+
+                                          ### default vars set to config/connect-distributed.properties ###
+
+##
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+##
+
+# This file contains some of the configurations for the Kafka Connect distributed worker. This file is intended
+# to be used with the examples, and some settings may differ from those used in a production system, especially
+# the `bootstrap.servers` and those specifying replication factors.
+
+# A list of host/port pairs to use for establishing the initial connection to the Kafka cluster.
+bootstrap_servers: "localhost:9092"
+
+# unique name for the cluster, used in forming the Connect cluster group. Note that this must not conflict with consumer group IDs
+group_id: connect-cluster
+
+# The converters specify the format of data in Kafka and how to translate it into Connect data. Every Connect user will
+# need to configure these based on the format they want their data in when loaded from or stored into Kafka
+key_converter: org.apache.kafka.connect.json.JsonConverter
+value_converter: org.apache.kafka.connect.json.JsonConverter
+# Converter-specific settings can be passed in by prefixing the Converter's setting with the converter we want to apply
+# it to
+key_converter_schemas_enable: true
+value_converter_schemas_enable: true
+
+# Topic to use for storing offsets. This topic should have many partitions and be replicated and compacted.
+# Kafka Connect will attempt to create the topic automatically when needed, but you can always manually create
+# the topic before starting Kafka Connect if a specific topic configuration is needed.
+# Most users will want to use the built-in default replication factor of 3 or in some cases even specify a larger value.
+# Since this means there must be at least as many brokers as the maximum replication factor used, we'd like to be able
+# to run this example on a single-broker cluster and so here we instead set the replication factor to 1.
+offset_storage_topic: connect-offsets
+offset_storage_replication_factor: 1
+#offset.storage.partitions=25
+
+# Topic to use for storing connector and task configurations; note that this should be a single partition, highly replicated,
+# and compacted topic. Kafka Connect will attempt to create the topic automatically when needed, but you can always manually create
+# the topic before starting Kafka Connect if a specific topic configuration is needed.
+# Most users will want to use the built-in default replication factor of 3 or in some cases even specify a larger value.
+# Since this means there must be at least as many brokers as the maximum replication factor used, we'd like to be able
+# to run this example on a single-broker cluster and so here we instead set the replication factor to 1.
+config_storage_topic: connect-configs
+config_storage_replication_factor: 1
+
+# Topic to use for storing statuses. This topic can have multiple partitions and should be replicated and compacted.
+# Kafka Connect will attempt to create the topic automatically when needed, but you can always manually create
+# the topic before starting Kafka Connect if a specific topic configuration is needed.
+# Most users will want to use the built-in default replication factor of 3 or in some cases even specify a larger value.
+# Since this means there must be at least as many brokers as the maximum replication factor used, we'd like to be able
+# to run this example on a single-broker cluster and so here we instead set the replication factor to 1.
+status_storage_topic: connect-status
+status_storage_replication_factor: 1
+#status.storage.partitions=5
+
+# Flush much faster than normal, which is useful for testing/debugging
+offset_flush_interval_ms: 10000
+
+# List of comma-separated URIs the REST API will listen on. The supported protocols are HTTP and HTTPS.
+# Specify hostname as 0.0.0.0 to bind to all interfaces.
+# Leave hostname empty to bind to default interface.
+# Examples of legal listener lists: HTTP://myhost:8083,HTTPS://myhost:8084"
+#listeners=HTTP://:8083
+
+# The Hostname & Port that will be given out to other workers to connect to i.e. URLs that are routable from other servers.
+# If not set, it uses the value for "listeners" if configured.
+#rest.advertised.host.name=
+#rest.advertised.port=
+#rest.advertised.listener=
+
+# Set to a list of filesystem paths separated by commas (,) to enable class loading isolation for plugins
+# (connectors, converters, transformations). The list should consist of top level directories that include 
+# any combination of: 
+# a) directories immediately containing jars with plugins and their dependencies
+# b) uber-jars with plugins and their dependencies
+# c) directories immediately containing the package directory structure of classes of plugins and their dependencies
+# Examples: 
+# plugin.path=/usr/local/share/java,/usr/local/share/kafka/plugins,/opt/connectors,
+#plugin.path=
+
+                                          ### default vars set to config/connect-file-sink.properties ###
+
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: local-file-sink
+connector_class: FileStreamSink
+tasks_max: 1
+file: test.sink.txt
+topics: connect-test
+
+                                          ### default vars set to config/connect-file-source.properties ###
+
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: local-file-source
+connector_class: FileStreamSource
+tasks_max: 1
+file: test.txt
+topic: connect-test
+
+                                          ### default vars set to config/log4j.properties ###
+
+
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Unspecified loggers and loggers with additivity=true output to server.log and stdout
+# Note that INFO only applies to unspecified loggers, the log level of the child logger is used otherwise
+log4j_rootLogger: "INFO, stdout, kafkaAppender"
+
+log4j_appender_stdout: "org.apache.log4j.ConsoleAppender"
+log4j_appender_stdout_layout: "org.apache.log4j.PatternLayout"
+log4j_appender_stdout_layout_ConversionPattern: "[%d] %p %m (%c)%n"
+
+log4j_appender_kafkaAppender: "org.apache.log4j.DailyRollingFileAppender"
+log4j_appender_kafkaAppender_DatePattern: "'.'yyyy-MM-dd-HH"
+log4j_appender_kafkaAppender_File: "${kafka.logs.dir}/server.log"
+log4j_appender_kafkaAppender_layout: "org.apache.log4j.PatternLayout"
+log4j_appender_kafkaAppender_layout_ConversionPattern: "[%d] %p %m (%c)%n"
+
+log4j_appender_stateChangeAppender: "org.apache.log4j.DailyRollingFileAppender"
+log4j_appender_stateChangeAppender_DatePattern: "'.'yyyy-MM-dd-HH"
+log4j_appender_stateChangeAppender_File: "${kafka.logs.dir}/state-change.log"
+log4j_appender_stateChangeAppender_layout: "org.apache.log4j.PatternLayout"
+log4j_appender_stateChangeAppender_layout_ConversionPattern: "[%d] %p %m (%c)%n"
+
+log4j_appender_requestAppender: "org.apache.log4j.DailyRollingFileAppender"
+log4j_appender_requestAppender_DatePattern: "'.'yyyy-MM-dd-HH"
+log4j_appender_requestAppender_File: "${kafka.logs.dir}/kafka-request.log"
+log4j_appender_requestAppender_layout: "org.apache.log4j.PatternLayout"
+log4j_appender_requestAppender_layout_ConversionPattern: "[%d] %p %m (%c)%n"
+
+log4j_appender_cleanerAppender: "org.apache.log4j.DailyRollingFileAppender"
+log4j_appender_cleanerAppender_DatePattern: "'.'yyyy-MM-dd-HH"
+log4j_appender_cleanerAppender_File: "${kafka.logs.dir}/log-cleaner.log"
+log4j_appender_cleanerAppender_layout: "org.apache.log4j.PatternLayout"
+log4j_appender_cleanerAppender_layout_ConversionPattern: "[%d] %p %m (%c)%n"
+
+log4j_appender_controllerAppender: "org.apache.log4j.DailyRollingFileAppender"
+log4j_appender_controllerAppender_DatePattern: "'.'yyyy-MM-dd-HH"
+log4j_appender_controllerAppender_File: "${kafka.logs.dir}/controller.log"
+log4j_appender_controllerAppender_layout: "org.apache.log4j.PatternLayout"
+log4j_appender_controllerAppender_layout_ConversionPattern: "[%d] %p %m (%c)%n"
+
+log4j_appender_authorizerAppender: "org.apache.log4j.DailyRollingFileAppender"
+log4j_appender_authorizerAppender_DatePattern: "'.'yyyy-MM-dd-HH"
+log4j_appender_authorizerAppender_File: "${kafka.logs.dir}/kafka-authorizer.log"
+log4j_appender_authorizerAppender_layout: "org.apache.log4j.PatternLayout"
+log4j_appender_authorizerAppender_layout_ConversionPattern: "[%d] %p %m (%c)%n"
+
+# Change the line below to adjust ZK client logging
+log4j_logger_org_apache_zookeeper: INFO
+
+# Change the two lines below to adjust the general broker logging level (output to server.log and stdout)
+log4j_logger_kafka: INFO
+log4j_logger_org_apache_kafka: INFO
+
+# Change to DEBUG or TRACE to enable request logging
+log4j_logger_kafka_request_logger: "WARN, requestAppender"
+log4j_additivity_kafka_request_logger: false
+
+# Uncomment the lines below and change log4j.logger.kafka.network.RequestChannel$ to TRACE for additional output
+# related to the handling of requests
+#log4j.logger.kafka.network.Processor=TRACE, requestAppender
+#log4j.logger.kafka.server.KafkaApis=TRACE, requestAppender
+#log4j.additivity.kafka.server.KafkaApis=false
+log4j_logger_kafka_network_RequestChannel: "WARN, requestAppender"
+log4j_additivity_kafka_network_RequestChannel: false
+
+log4j_logger_kafka_controller: "TRACE, controllerAppender"
+log4j_additivity_kafka_controller: false
+
+log4j_logger_kafka_log_LogCleaner: "INFO, cleanerAppender"
+log4j_additivity_kafka_log_LogCleaner: false
+
+log4j_logger_state_change_logger: "INFO, stateChangeAppender"
+log4j_additivity_state_change_logger: false
+
+# Access denials are logged at INFO level, change to DEBUG to also log allowed accesses
+log4j_logger_kafka_authorizer_logger: "INFO, authorizerAppender"
+log4j_additivity_kafka_authorizer_logger: false
+

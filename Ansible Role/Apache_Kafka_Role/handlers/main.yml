@@ -1,0 +1,13 @@
+---
+# handlers file for apache_kafka
+- name: Restart_Kafka_Service
+  service:
+    name: kafka
+    state: restarted
+  when: kafka_restart
+
+- name: Restart_Zookeeper_Service
+  service:
+    name: zookeeper
+    state: restarted
+  when: kafka_restart

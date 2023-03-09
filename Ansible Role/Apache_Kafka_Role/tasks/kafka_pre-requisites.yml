@@ -1,0 +1,32 @@
+# APACHE_KAFKA_Pre-Requisites
+
+- name: Create Kafka Group
+  group:
+    name: "{{ kafka_group }}"
+    state: present
+
+- name: Create Kafka User
+  user:
+    name: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    state: present
+
+- name: Check Whether Kafka has already Downloaded & Unpacked
+  stat:
+    path: "{{ kafka_base_dir }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}"
+  register: tar_file
+
+- name: Installing Java
+  package:
+    name: openjdk-8-jdk
+    state: present
+    update_cache: yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: Installing Java on RedHat
+  yum:
+    name: java-11-openjdk-devel
+    state: present
+    update_cache: yes
+  when: ansible_distribution == "RedHat"
+

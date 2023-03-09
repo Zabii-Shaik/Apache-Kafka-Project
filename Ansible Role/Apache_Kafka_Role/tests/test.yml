@@ -1,0 +1,6 @@
+---
+- hosts: group
+  become: yes
+  gather_facts: yes
+  roles:
+    - /home/ubuntu/kafka_tool/apache_kafka

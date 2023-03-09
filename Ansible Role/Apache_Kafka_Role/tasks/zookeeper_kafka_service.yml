@@ -1,0 +1,10 @@
+# Starting Zookeeper & Kafka Services
+
+- name: Starting Zookeeper Service
+  shell:
+    cmd: "{{ kafka_base_dir }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}/bin/zookeeper-server-start.sh kafka_{{ kafka_scala_version }}-{{ kafka_version }}/config/zookeeper.properties > /dev/null 2>&1 &"
+
+- name: Starting Kafka Service
+  shell:
+    cmd: "{{ kafka_base_dir }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}/bin/kafka-server-start.sh kafka_{{ kafka_scala_version }}-{{ kafka_version }}/config/server.properties > /dev/null 2>&1 &"
+

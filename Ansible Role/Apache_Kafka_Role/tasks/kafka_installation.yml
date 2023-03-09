@@ -1,0 +1,9 @@
+# Downloading & Extracting of Apache_Kafka
+
+- name: Downloading & Extracting Apache_Kafka
+  unarchive:
+    src: "{{ kafka_base_url }}/{{ kafka_version }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}.tgz"
+    dest: "{{ kafka_base_dir }}"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    remote_src: yes

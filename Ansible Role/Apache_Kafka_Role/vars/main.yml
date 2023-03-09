@@ -1,0 +1,20 @@
+---
+# vars file for apache_kafka
+
+# variables set to kafka_url #
+
+kafka_base_url: https://downloads.apache.org/kafka
+kafka_version: 3.3.1
+kafka_scala_version: 2.12
+
+# variables set to kafka_installed_dir #
+
+kafka_base_dir: /tmp
+
+kafka_systemd_file_location_kafka_Ubuntu: /etc/systemd/system/kafka.service
+
+kafka_systemd_file_location_zookeeper_Ubuntu: /etc/systemd/system/zookeeper.service
+
+kafka_systemd_file_location_kafka_RedHat: /usr/lib/systemd/system/kafka.service
+
+kafka_systemd_file_location_zookeeper_RedHat: /usr/lib/systemd/system/zookeeper.service

@@ -1,0 +1,15 @@
+---
+# Including tasks in main.yml
+
+- name: Checking the pre-requisites on nodes
+  include_tasks: kafka_pre-requisites.yml
+
+- name: Installing APACHE_KAFKA on nodes
+  include_tasks: kafka_installation.yml
+
+- name: Configuring APACHE_KAFKA
+  include_tasks: configure_kafka.yml
+  
+- name: Starting Zookeeper & Kafka Services
+  include_tasks: zookeeper_kafka_service.yml
+

@@ -1,0 +1,17 @@
+[Unit]
+Description=Apache Zookeeper server
+Documentation=http://zookeeper.apache.org
+Requires=network.target remote-fs.target
+After=network.target remote-fs.target
+    
+[Service]
+Type=simple
+User={{ kafka_user }}
+Group={{ kafka_group }}
+Environment="LOG_DIR={{ zookeeper_dataDir }}"
+ExecStart="sudo { kafka_base_dir }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}/bin/zookeeper-server-start.sh -daemon {{ kafka_base_dir }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}/config/zookeeper.properties"
+ExecStop="sudo {{ kafka_base_dir }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}/bin/zookeeper-server-stop.sh"
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,22 @@
+---
+plugin: aws_ec2
+
+regions:
+  - ap-south-2
+
+filters:
+  tag:Name: 
+    - zookeeper_server-1
+    - zookeeper_server-2
+    - zookeeper_server-3
+    - kafka_server-1
+    - kafka_server-2
+    - kafka_server-3
+
+keyed_groups:
+  - key: tags
+    prefix: tag
+  - prefix: instance_type
+    key: instance_type
+  - key: placement.region
+    prefix: aws_region

@@ -1,0 +1,6 @@
+node1 ansible_user=ubuntu ansible_host=18.60.52.194
+node2 ansible_user=ec2-user ansible_host=18.60.52.32
+
+[group]
+node1
+node2

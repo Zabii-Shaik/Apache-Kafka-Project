@@ -1,0 +1,117 @@
+# APACHE_KAFKA_Template_Configuration
+
+- name: Template file into server.properties
+  template: 
+    src: server.properties.j2
+    dest: "{{ kafka_base_dir }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}/config/server.properties"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    mode: 0664
+      #remote_src: yes
+
+- name: Template file into zookeeper.properties
+  template:
+    src: zookeeper.properties.j2
+    dest: "{{ kafka_base_dir }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}/config/zookeeper.properties"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    mode: 0664
+
+- name: Template file into consumer.properties
+  template:
+    src: consumer.properties.j2
+    dest: "{{ kafka_base_dir }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}/config/consumer.properties"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    mode: 0664
+
+- name: Template file into producer.properties
+  template:
+    src: producer.properties.j2
+    dest: "{{ kafka_base_dir }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}/config/producer.properties"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    mode: 0664
+
+- name: Template file into connect-standalone.properties
+  template:
+    src: connect-standalone.properties.j2
+    dest: "{{ kafka_base_dir }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}/config/connect-standalone.properties"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    mode: 0664
+
+- name: Template file into connect-console-sink.properties
+  template:
+    src: connect-console-sink.properties.j2
+    dest: "{{ kafka_base_dir }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}/config/connect-console-sink.properties"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    mode: 0664
+
+- name: Template file into connect-console-source.properties
+  template:
+    src: connect-console-source.properties.j2
+    dest: "{{ kafka_base_dir }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}/config/connect-console-source.properties"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    mode: 0664
+
+- name: Template file into connect-distributed.properties
+  template:
+    src: connect-distributed.properties.j2
+    dest: "{{ kafka_base_dir }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}/config/connect-distributed.properties"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    mode: 0664
+
+- name: Template file into log4j.properties
+  template:
+    src: log4j.properties.j2
+    dest: "{{ kafka_base_dir }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}/config/log4j.properties"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    mode: 0664
+
+- name: Template kafka systemd service file
+  template:
+    src: kafka.service.j2
+    dest: "{{ kafka_systemd_file_location_kafka_Ubuntu }}"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    mode: 0664
+  when: ansible_distribution == "Ubuntu"
+
+- name: Template kafka systemd service file
+  template:
+    src: zookeeper.service.j2
+    dest: "{{ kafka_systemd_file_location_zookeeper_Ubuntu }}"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    mode: 0664
+  notify:
+    - Restart_Kafka_Service
+    - Restart_Zookeeper_Service
+  when: ansible_distribution == "Ubuntu"
+
+- name: Template kafka systemd service file
+  template:
+    src: kafka.service.j2
+    dest: "{{ kafka_systemd_file_location_kafka_RedHat }}"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    mode: 0664
+  when: ansible_distribution == "RedHat"
+
+- name: Template kafka systemd service file
+  template:
+    src: zookeeper.service.j2
+    dest: "{{ kafka_systemd_file_location_zookeeper_RedHat }}"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    mode: 0664
+  notify:
+    - Restart_Kafka_Service
+    - Restart_Zookeeper_Service
+  when: ansible_distribution == "RedHat"
+
